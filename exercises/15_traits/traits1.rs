@@ -1,11 +1,16 @@
-// The trait `AppendBar` has only one function which appends "Bar" to any object
-// implementing this trait.
+use std::str::FromStr;
+
+// The trait `AppendBar` has only one function which appends "Bar" to any object implementing this trait.
 trait AppendBar {
     fn append_bar(self) -> Self;
 }
 
 impl AppendBar for String {
     // TODO: Implement `AppendBar` for the type `String`.
+    fn append_bar(mut self) -> String {
+        self.push_str("Bar");
+        self
+    }
 }
 
 fn main() {
