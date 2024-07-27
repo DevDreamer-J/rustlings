@@ -1,14 +1,15 @@
-// In this exercise, you'll learn some of the unique advantages that iterators
-// can offer.
+// In this exercise, you'll learn some of the unique advantages that iterators can offer.
 
 // TODO: Complete the `capitalize_first` function.
 // "hello" -> "Hello"
 fn capitalize_first(input: &str) -> String {
     let mut chars = input.chars();
+    let mut string:String = String::new();
     match chars.next() {
         None => String::new(),
-        Some(first) => todo!(),
+        Some(first) => string.push(first.to_ascii_uppercase()),
     }
+    string
 }
 
 // TODO: Apply the `capitalize_first` function to a slice of string slices.
