@@ -1,15 +1,19 @@
-// In this exercise, you'll learn some of the unique advantages that iterators can offer.
+// In this exercise, you'll learn some of the unique advantages that iterators
+// can offer.
 
 // TODO: Complete the `capitalize_first` function.
 // "hello" -> "Hello"
 fn capitalize_first(input: &str) -> String {
-    let mut chars = input.chars();
-    let mut string:String = String::new();
+    let mut chars: std::str::Chars = input.chars();
     match chars.next() {
         None => String::new(),
-        Some(first) => string.push(first.to_ascii_uppercase()),
+        Some(first) => {
+            let mut string = String::new();
+            string.push(first.to_ascii_uppercase());
+            string.push_str(&input[1..]);
+            string
+        },
     }
-    string
 }
 
 // TODO: Apply the `capitalize_first` function to a slice of string slices.
@@ -17,6 +21,11 @@ fn capitalize_first(input: &str) -> String {
 // ["hello", "world"] -> ["Hello", "World"]
 fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
     // ???
+    let mut vec: Vec<String> = Vec::new();
+    for i in words.to_owned(){
+        vec.push(capitalize_first(&i))
+    }
+    vec
 }
 
 // TODO: Apply the `capitalize_first` function again to a slice of string
@@ -24,6 +33,11 @@ fn capitalize_words_vector(words: &[&str]) -> Vec<String> {
 // ["hello", " ", "world"] -> "Hello World"
 fn capitalize_words_string(words: &[&str]) -> String {
     // ???
+    let mut string: String = String::new();
+    for i in words.to_owned(){
+        string.push_str(&capitalize_first(i))
+    }
+    string
 }
 
 fn main() {
