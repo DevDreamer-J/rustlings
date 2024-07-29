@@ -5,16 +5,15 @@
 // - Modules
 // - Enums
 //
-// Let's build a little machine in the form of a function. As input, we're going
-// to give a list of strings and commands. These commands determine what action
-// is going to be applied to the string. It can either be:
+// Let's build a little machine in the form of a function. As input, we're going to give a list of strings and commands.
+// These commands determine what action is going to be applied to the string.
+// It can either be:
 // - Uppercase the string
 // - Trim the string
 // - Append "bar" to the string a specified amount of times
 //
 // The exact form of this will be:
-// - The input is going to be a Vector of 2-length tuples,
-//   the first element is the string, the second one is the command.
+// - The input is going to be a Vector of 2-length tuples, the first element is the string, the second one is the command.
 // - The output element is going to be a vector of strings.
 
 enum Command {
@@ -24,10 +23,23 @@ enum Command {
 }
 
 mod my_module {
+    use std::borrow::BorrowMut;
+
     use super::Command;
 
     // TODO: Complete the function.
     // pub fn transformer(input: ???) -> ??? { ??? }
+    pub fn transformer(input: Vec<(String, Command)>) -> Vec<String> {
+        let mut vec: Vec<String> = Vec::new();
+        for i in input {
+            match i.1 {
+                Command::Uppercase => vec.push(i.0.to_uppercase()),
+                Command::Trim => vec.push(i.0.trim().to_owned()),
+                Command::Append(times) => vec.push(String::from(&i.0)+&"bar".repeat(times)),
+            }
+        }
+        vec
+    }
 }
 
 fn main() {
@@ -38,11 +50,12 @@ fn main() {
 mod tests {
     // TODO: What do we need to import to have `transformer` in scope?
     // use ???;
+    use super::my_module::*;
     use super::Command;
 
     #[test]
     fn it_works() {
-        let input = vec![
+        let input: Vec<(String, Command)> = vec![
             ("hello".to_string(), Command::Uppercase),
             (" all roads lead to rome! ".to_string(), Command::Trim),
             ("foo".to_string(), Command::Append(1)),

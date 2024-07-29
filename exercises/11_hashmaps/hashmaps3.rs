@@ -1,10 +1,7 @@
-// A list of scores (one per line) of a soccer match is given. Each line is of
-// the form "<team_1_name>,<team_2_name>,<team_1_goals>,<team_2_goals>"
+// A list of scores (one per line) of a soccer match is given. Each line is of the form "<team_1_name>,<team_2_name>,<team_1_goals>,<team_2_goals>"
 // Example: "England,France,4,2" (England scored 4 goals, France 2).
 //
-// You have to build a scores table containing the name of the team, the total
-// number of goals the team scored, and the total number of goals the team
-// conceded.
+// You have to build a scores table containing the name of the team, the total number of goals the team scored, and the total number of goals the team conceded.
 
 use std::collections::HashMap;
 
@@ -17,7 +14,7 @@ struct Team {
 
 fn build_scores_table(results: &str) -> HashMap<&str, Team> {
     // The name of the team is the key and its associated struct is the value.
-    let mut scores = HashMap::new();
+    let mut scores: HashMap<&str, Team> = HashMap::new();
 
     for line in results.lines() {
         let mut split_iterator = line.split(',');
@@ -26,13 +23,39 @@ fn build_scores_table(results: &str) -> HashMap<&str, Team> {
         let team_2_name = split_iterator.next().unwrap();
         let team_1_score: u8 = split_iterator.next().unwrap().parse().unwrap();
         let team_2_score: u8 = split_iterator.next().unwrap().parse().unwrap();
-
         // TODO: Populate the scores table with the extracted details.
         // Keep in mind that goals scored by team 1 will be the number of goals
         // conceded by team 2. Similarly, goals scored by team 2 will be the
         // number of goals conceded by team 1.
-    }
+        if !scores.contains_key(team_1_name) {
+            scores.insert(
+                team_1_name,
+                Team {
+                    goals_scored: 0,
+                    goals_conceded: 0,
+                },
+            );
+            scores.get_mut(team_1_name).unwrap().goals_scored = 0;
+        } else {
+        }
+        let team = scores.get_mut(team_1_name).unwrap();
+        team.goals_scored += team_1_score;
+        team.goals_conceded += team_2_score;
 
+        if !scores.contains_key(team_2_name) {
+            scores.insert(
+                team_2_name,
+                Team {
+                    goals_scored: 0,
+                    goals_conceded: 0,
+                },
+            );
+        } else {
+        }
+        let team = scores.get_mut(team_2_name).unwrap();
+        team.goals_scored += team_2_score;
+        team.goals_conceded += team_1_score;
+    }
     scores
 }
 
