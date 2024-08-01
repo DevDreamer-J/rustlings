@@ -1,8 +1,7 @@
-// This is similar to the previous `from_into` exercise. But this time, we'll
-// implement `FromStr` and return errors instead of falling back to a default
-// value. Additionally, upon implementing `FromStr`, you can use the `parse`
-// method on strings to generate an object of the implementor type. You can read
-// more about it in the documentation:
+// This is similar to the previous `from_into` exercise.
+// But this time, we'll implement `FromStr` and return errors instead of falling back to a default value.
+// Additionally, upon implementing `FromStr`, you can use the `parse` method on strings to generate an object of the implementor type.
+// You can read more about it in the documentation:
 // https://doc.rust-lang.org/std/str/trait.FromStr.html
 
 use std::num::ParseIntError;
@@ -25,10 +24,8 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// TODO: Complete this `From` implementation to be able to parse a `Person`
-// out of a string in the form of "Mark,20".
-// Note that you'll need to parse the age component into a `u8` with something
-// like `"4".parse::<u8>()`.
+// TODO: Complete this `From` implementation to be able to parse a `Person` out of a string in the form of "Mark,20".
+// Note that you'll need to parse the age component into a `u8` with something like `"4".parse::<u8>()`.
 //
 // Steps:
 // 1. Split the given string on the commas present in it.
@@ -41,7 +38,22 @@ enum ParsePersonError {
 impl FromStr for Person {
     type Err = ParsePersonError;
 
-    fn from_str(s: &str) -> Result<Self, Self::Err> {}
+    fn from_str(s: &str) -> Result<Self, Self::Err> {
+        let list: Vec<&str> = s.split(',').collect::<Vec<&str>>();
+        if list.len() != 2 {
+            return Err(ParsePersonError::BadLen);
+        }
+        if list.first().unwrap().to_owned().is_empty() {
+            return Err(ParsePersonError::NoName);
+        }
+        match list.last().unwrap().to_owned().parse::<u8>() {
+            Ok(num) => Ok(Person{
+                name: list.first().unwrap().to_owned().to_string(),
+                age: num
+            }),
+            Err(e) => Err(ParsePersonError::ParseInt(e)),
+        }
+    }
 }
 
 fn main() {

@@ -1,8 +1,7 @@
-// Building on the last exercise, we want all of the threads to complete their
-// work. But this time, the spawned threads need to be in charge of updating a
-// shared value: `JobStatus.jobs_done`
+// Building on the last exercise, we want all of the threads to complete their work.
+// But this time, the spawned threads need to be in charge of updating a shared value: `JobStatus.jobs_done`
 
-use std::{sync::Arc, thread, time::Duration};
+use std::{sync::Arc, thread, time::Duration, sync::Mutex};
 
 struct JobStatus {
     jobs_done: u32,
@@ -10,15 +9,15 @@ struct JobStatus {
 
 fn main() {
     // TODO: `Arc` isn't enough if you want a **mutable** shared state.
-    let status = Arc::new(JobStatus { jobs_done: 0 });
+    let status: Arc<Mutex<JobStatus>> = Arc::new(Mutex::new(JobStatus { jobs_done: 0 }));
 
-    let mut handles = Vec::new();
+    let mut handles: Vec<thread::JoinHandle<()>> = Vec::new();
     for _ in 0..10 {
-        let status_shared = Arc::clone(&status);
-        let handle = thread::spawn(move || {
+        let status_shared: Arc<Mutex<JobStatus>> = Arc::clone(&status);
+        let handle: thread::JoinHandle<()> = thread::spawn(move || {
             thread::sleep(Duration::from_millis(250));
-
             // TODO: You must take an action before you update a shared value.
+            let mut status_shared = status_shared.lock().unwrap();
             status_shared.jobs_done += 1;
         });
         handles.push(handle);
@@ -30,5 +29,5 @@ fn main() {
     }
 
     // TODO: Print the value of `JobStatus.jobs_done`.
-    println!("Jobs done: {}", todo!());
+    println!("Jobs done: {}", status.lock().unwrap().jobs_done);
 }
